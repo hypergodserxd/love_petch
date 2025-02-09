@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>อาริว รัก เพชร</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffe6f2; /* พื้นหลังชมพู */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            overflow: hidden; /* กัน scroll */
+        }
+
+        h1 {
+            color: #ff4d94;
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .image-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        /* เอฟเฟคเมื่อกดค้างที่รูป */
+        .image-container:active img {
+            transform: scale(3); /* ขยายรูป */
+        }
+
+        /* หัวใจลอยขึ้น */
+        .heart {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('https://symbl-world.akamaized.net/i/webp/67/10bd41d47d4180ab945d58ff652551.webp');
+            background-size: cover;
+            opacity: 1;
+            animation: floatUp 2s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(0.5);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>อาริว รัก เพชร</h1>
+
+    <!-- Container สำหรับรูป -->
+    <div class="image-container" id="heartContainer">
+        <img src="https://symbl-world.akamaized.net/i/webp/67/10bd41d47d4180ab945d58ff652551.webp" alt="Heart Image">
+    </div>
+
+    <script>
+        document.getElementById("heartContainer").addEventListener("mousedown", function() {
+            let interval = setInterval(() => {
+                createFloatingHeart();
+            }, 200); // สร้างหัวใจใหม่ทุก 200ms
+
+            document.addEventListener("mouseup", function() {
+                clearInterval(interval);
+            }, { once: true });
+        });
+
+        function createFloatingHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+
+            const x = Math.random() * window.innerWidth; // ตำแหน่งแนวนอนแบบสุ่ม
+            heart.style.left = `${x}px`;
+            heart.style.bottom = "0px"; // เริ่มจากล่างสุด
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove(); // ลบออกเมื่อ animation จบ
+            }, 2000);
+        }
+    </script>
+
+</body>
+</html>
