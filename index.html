@@ -66,6 +66,24 @@
             opacity: 1;
             visibility: visible;
         }
+
+        /* ปุ่มกดค้าง */
+        .hold-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 20px;
+            color: white;
+            background-color: #ff4d94;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .hold-button:active {
+            background-color: #e60073;
+        }
+
     </style>
 </head>
 <body>
@@ -77,6 +95,9 @@
         <img src="https://symbl-world.akamaized.net/i/webp/67/10bd41d47d4180ab945d58ff652551.webp" alt="Heart Image">
     </div>
 
+    <!-- ปุ่มกดค้าง -->
+    <button class="hold-button" id="hold-button">กดค้าง</button>
+
     <!-- รูปหัวใจเต็มจอ -->
     <div class="fullscreen-heart" id="fullscreen-heart">
         <img src="https://symbl-world.akamaized.net/i/webp/67/10bd41d47d4180ab945d58ff652551.webp" alt="Full Heart">
@@ -85,17 +106,18 @@
     <script>
         const smallHeart = document.getElementById("small-heart");
         const fullHeart = document.getElementById("fullscreen-heart");
+        const holdButton = document.getElementById("hold-button");
 
         let pressTimer;
 
-        // กดค้างเพื่อแสดงหัวใจเต็มจอ
+        // ฟังก์ชันเริ่มกดค้าง
         function startPress() {
             pressTimer = setTimeout(() => {
                 fullHeart.classList.add("show");
             }, 500); // กดค้าง 0.5 วิ
         }
 
-        // ปล่อยนิ้วแล้วซ่อนหัวใจเต็มจอ
+        // ฟังก์ชันปล่อยนิ้วแล้วซ่อนหัวใจ
         function cancelPress() {
             clearTimeout(pressTimer);
             fullHeart.classList.remove("show");
@@ -105,9 +127,16 @@
         smallHeart.addEventListener("mousedown", startPress);
         smallHeart.addEventListener("mouseup", cancelPress);
         smallHeart.addEventListener("mouseleave", cancelPress);
-
         smallHeart.addEventListener("touchstart", startPress);
         smallHeart.addEventListener("touchend", cancelPress);
+
+        // ทำให้ปุ่มทำงานเหมือนกดค้างที่หัวใจ
+        holdButton.addEventListener("mousedown", startPress);
+        holdButton.addEventListener("mouseup", cancelPress);
+        holdButton.addEventListener("mouseleave", cancelPress);
+        holdButton.addEventListener("touchstart", startPress);
+        holdButton.addEventListener("touchend", cancelPress);
+
     </script>
 
 </body>
