@@ -15,7 +15,6 @@
             height: 100vh;
             margin: 0;
             flex-direction: column;
-            overflow: hidden; /* กัน scroll */
         }
 
         h1 {
@@ -26,8 +25,8 @@
 
         .image-container {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 200px;
+            height: 200px;
             overflow: hidden;
             cursor: pointer;
             transition: transform 0.3s ease;
@@ -40,31 +39,32 @@
             transition: transform 0.3s ease;
         }
 
-        /* เอฟเฟคเมื่อกดค้างที่รูป */
-        .image-container:active img {
-            transform: scale(3); /* ขยายรูป */
+        /* รูปหัวใจเต็มจอที่ซ่อนอยู่ */
+        .fullscreen-heart {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255, 77, 148, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
         }
 
-        /* หัวใจลอยขึ้น */
-        .heart {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background-image: url('https://symbl-world.akamaized.net/i/webp/67/10bd41d47d4180ab945d58ff652551.webp');
-            background-size: cover;
+        .fullscreen-heart img {
+            width: 80%;
+            max-width: 400px;
+        }
+
+        /* แสดงรูปหัวใจเต็มจอเมื่อกดค้าง */
+        .show {
             opacity: 1;
-            animation: floatUp 2s ease-out forwards;
-        }
-
-        @keyframes floatUp {
-            0% {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) scale(0.5);
-                opacity: 0;
-            }
+            visibility: visible;
         }
     </style>
 </head>
@@ -72,36 +72,42 @@
 
     <h1>อาริว รัก เพชร</h1>
 
-    <!-- Container สำหรับรูป -->
-    <div class="image-container" id="heartContainer">
+    <!-- รูปหัวใจเล็ก -->
+    <div class="image-container" id="small-heart">
         <img src="https://symbl-world.akamaized.net/i/webp/67/10bd41d47d4180ab945d58ff652551.webp" alt="Heart Image">
     </div>
 
+    <!-- รูปหัวใจเต็มจอ -->
+    <div class="fullscreen-heart" id="fullscreen-heart">
+        <img src="https://symbl-world.akamaized.net/i/webp/67/10bd41d47d4180ab945d58ff652551.webp" alt="Full Heart">
+    </div>
+
     <script>
-        document.getElementById("heartContainer").addEventListener("mousedown", function() {
-            let interval = setInterval(() => {
-                createFloatingHeart();
-            }, 200); // สร้างหัวใจใหม่ทุก 200ms
+        const smallHeart = document.getElementById("small-heart");
+        const fullHeart = document.getElementById("fullscreen-heart");
 
-            document.addEventListener("mouseup", function() {
-                clearInterval(interval);
-            }, { once: true });
-        });
+        let pressTimer;
 
-        function createFloatingHeart() {
-            const heart = document.createElement("div");
-            heart.classList.add("heart");
-
-            const x = Math.random() * window.innerWidth; // ตำแหน่งแนวนอนแบบสุ่ม
-            heart.style.left = `${x}px`;
-            heart.style.bottom = "0px"; // เริ่มจากล่างสุด
-
-            document.body.appendChild(heart);
-
-            setTimeout(() => {
-                heart.remove(); // ลบออกเมื่อ animation จบ
-            }, 2000);
+        // กดค้างเพื่อแสดงหัวใจเต็มจอ
+        function startPress() {
+            pressTimer = setTimeout(() => {
+                fullHeart.classList.add("show");
+            }, 500); // กดค้าง 0.5 วิ
         }
+
+        // ปล่อยนิ้วแล้วซ่อนหัวใจเต็มจอ
+        function cancelPress() {
+            clearTimeout(pressTimer);
+            fullHeart.classList.remove("show");
+        }
+
+        // รองรับทั้งเมาส์และสัมผัส
+        smallHeart.addEventListener("mousedown", startPress);
+        smallHeart.addEventListener("mouseup", cancelPress);
+        smallHeart.addEventListener("mouseleave", cancelPress);
+
+        smallHeart.addEventListener("touchstart", startPress);
+        smallHeart.addEventListener("touchend", cancelPress);
     </script>
 
 </body>
