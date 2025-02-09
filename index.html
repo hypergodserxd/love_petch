@@ -84,6 +84,27 @@
             background-color: #e60073;
         }
 
+        /* สไตล์ของหัวใจที่ลอยขึ้น */
+        .heart {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 30px;
+            color: #ff4d94;
+            animation: floatHeart 2s forwards;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateX(-50%) translateY(0);
+            }
+            100% {
+                transform: translateX(-50%) translateY(-300px); /* ขยับหัวใจขึ้น */
+                opacity: 0;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -107,6 +128,7 @@
         const smallHeart = document.getElementById("small-heart");
         const fullHeart = document.getElementById("fullscreen-heart");
         const holdButton = document.getElementById("hold-button");
+        const heartContainer = document.getElementById("small-heart"); // ตำแหน่งที่ใช้สำหรับสร้างหัวใจลอย
 
         let pressTimer;
 
@@ -115,12 +137,38 @@
             pressTimer = setTimeout(() => {
                 fullHeart.classList.add("show");
             }, 500); // กดค้าง 0.5 วิ
+
+            // สร้างหัวใจลอยขึ้นทุก 200ms
+            let interval = setInterval(() => {
+                createFloatingHeart();
+            }, 200);
+
+            // ปล่อยปุ่มแล้วหยุดการสร้างหัวใจ
+            document.addEventListener("mouseup", function() {
+                clearInterval(interval);
+            }, { once: true });
         }
 
         // ฟังก์ชันปล่อยนิ้วแล้วซ่อนหัวใจ
         function cancelPress() {
             clearTimeout(pressTimer);
             fullHeart.classList.remove("show");
+        }
+
+        // ฟังก์ชันสร้างหัวใจลอยขึ้น
+        function createFloatingHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "❤️"; // รูปหัวใจ
+
+            const x = Math.random() * window.innerWidth; // ตำแหน่งแนวนอนแบบสุ่ม
+            heart.style.left = `${x}px`;
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove(); // ลบออกเมื่อ animation จบ
+            }, 2000);
         }
 
         // รองรับทั้งเมาส์และสัมผัส
@@ -136,7 +184,6 @@
         holdButton.addEventListener("mouseleave", cancelPress);
         holdButton.addEventListener("touchstart", startPress);
         holdButton.addEventListener("touchend", cancelPress);
-
     </script>
 
 </body>
